@@ -7,7 +7,6 @@ A small project to learn Amazon Alexa development.
 
 
 * There are two difficulty modes: Easy and Hard
-    - Hard mode is available only as a consecutive game after beating Alexa on Easy mode
 * The game starts with a random number of chips on a table
 * Turns alternate between Alexa and the user, with Alexa going first
 * During the turn, the player must pick up either 1, 2, or 3 chips from the table

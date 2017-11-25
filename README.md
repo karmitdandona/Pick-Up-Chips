@@ -16,4 +16,4 @@ A small project to learn Amazon Alexa development.
 * If the user won, he/she is prompted to play again on Hard mode
 
 #### To Do:
-* get_welcome_response should only run first time the skill is launched (veteran users should not have to hear the full message everytime)
+* get_welcome_response should only run first time the skill is launched (veteran users should not have to hear the full message every time)... Right now, is it setup so that saying difficulty as part of utterance skips the instructions??

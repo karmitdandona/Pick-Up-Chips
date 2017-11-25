@@ -8,6 +8,9 @@
           "type": "DIFFICULTY_OPTIONS"
         }
       ]
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
     }
   ]
 }

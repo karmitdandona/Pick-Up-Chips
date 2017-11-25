@@ -14,3 +14,6 @@ A small project to learn Amazon Alexa development.
 
 * After the game is over, the user is given the option to play again
 * If the user won, he/she is prompted to play again on Hard mode
+
+#### To Do:
+* get_welcome_response should only run first time the skill is launched (veteran users should not have to hear the full message everytime)

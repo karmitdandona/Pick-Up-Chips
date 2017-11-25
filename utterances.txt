@@ -1,9 +1,11 @@
-StartGame Play Pick Up Chips
 StartGame Play Pick Up Chips {DifficultyValue}
 StartGame {DifficultyValue}
-StartGame Play Pick Up Chips
 StartGame Play Pick Up Chips {DifficultyValue}
 StartGame Play {DifficultyValue}
+GetNumber {Number}
+GetNumber {Number} chips
+GetNumber I pick {Number}
+GetNumber I pick {Number} chips
 AMAZON.HelpIntent How do I play Pick Up Chips
 AMAZON.HelpIntent How to play Pick Up Chips
 AMAZON.HelpIntent Instructions

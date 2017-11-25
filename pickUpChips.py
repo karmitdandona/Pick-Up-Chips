@@ -164,7 +164,14 @@ def GameLoop(intent, session):
     difficulty = session["sessionAttributes"]["difficulty"]
     chipsOnBoard = chipsOnBoard - intent["slots"]["Number"]["value"]  # subtracts the user's selection
 
-    ### Consider: Win conditions and edge case of the final turn before the win condition.
+    ### Consider: Win conditions and edge case of the final turn before the win condition. (also make should_end_session True if there's a winner)  # FIXME
+
+    # Make an isValidInput function ot run before subtracting the user's choice from chipsOnBoard to ensure we dont go into the negatives.
+    # Use this function for Alexa's choice too (Only really needed for the randint one, since hard mode shouldn't require it. If this fails the input check, just keep re-checking it in a while loop until it passes (i.e. keep generating random numbers until it works, as long as we have more than 1 chip left on the table... or just have a specific case for if it's greater than 1 and less than 3, just subtract the exact amount to make it 1 and thus win the game [probably won't do this, because it's supposed to be easy mode])))
+
+    # Then make a function that checks iwn conditions after the user's play (after the subtraction) and again after Alexa's play (after Alexa's subtraction)
+    
+
 
     if difficulty.lower() == "easy" or difficulty.lower() == "medium":
         AlexaSelection = randint(1, 3)

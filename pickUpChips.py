@@ -54,12 +54,19 @@ def on_intent(intent_request, session):
     if intent_name == "StartGame":
         return GameSetup(intent, session)
     elif intent_name == "GetNumber":
-        if intent["slots"]["Number"]["value"] != "1" and intent["slots"]["Number"]["value"] != "2" and intent["slots"]["Number"]["value"] != "3":
-            session_attributes = session["attributes"]
-            speech_output = "Sorry, that sounded like an invalid number of chips. You can only take 1, 2, or 3 chips. How many chips do you take?"
-            reprompt_text = "Sorry, that sounded like an invalid number of chips. How many chips do you take from the table?"
+        try:
+            if intent["slots"]["Number"]["value"] != "1" and intent["slots"]["Number"]["value"] != "2" and intent["slots"]["Number"]["value"] != "3":
+                session_attributes = session["attributes"]
+                speech_output = "Sorry, that sounded like an invalid number of chips. You can only take 1, 2, or 3 chips. How many chips do you take?"
+                reprompt_text = "Sorry, that sounded like an invalid number of chips. How many chips do you take from the table?"
+                return build_response(session_attributes, build_speechlet_response(card_title, speech_output, reprompt_text, should_end_session))
+            return GameLoop(intent, session)
+        except:
+            session_attributes = {}
+            speech_output = "Sorry, that sounded like an invalid difficulty. The options are easy, medium, or hard. Please try again."
+            reprompt_text = None
+            should_end_session = True
             return build_response(session_attributes, build_speechlet_response(card_title, speech_output, reprompt_text, should_end_session))
-        return GameLoop(intent, session)
     elif intent_name == "AMAZON.HelpIntent":
         return get_welcome_response()
     elif intent_name == "AMAZON.CancelIntent" or intent_name == "AMAZON.StopIntent":
@@ -118,7 +125,7 @@ def get_welcome_response():
 
     session_attributes = {}
     card_title = "Welcome"
-    speech_output = "Welcome to Pick Up Chips. There is a pile of chips on the table. Your objective is to not pick up the last chip. We will pick up 1, 2, or 3 chips in alternating turns. I will go first. What difficulty would you like to play?"
+    speech_output = "Welcome to Pick Up Chips. There is a pile of chips on the table. Your objective is to not pick up the last chip. We will pick up 1, 2, or 3 chips in alternating turns. I will go first. What difficulty would you like to play: easy, medium, or hard?"
     # If the user either does not reply to the welcome message or says something
     # that is not understood, they will be prompted again with this text.
     reprompt_text = "Please select a difficulty. The options are easy, medium, or hard."
@@ -136,16 +143,16 @@ def GameSetup(intent, session):
     should_end_session = False
 
 
-    # This should always evaluate to true
+    if 'value' not in intent['slots']['DifficultyValue']:  # If a word that is not easy, medium, or hard is used for difficulty. If a number is used, that is covered by the edge case in try/except in the on_intent function
+        speech_output = "Hmm, I don't recognize that difficulty. The options are easy, medium, or hard. What difficulty would you like?"
+        reprompt_text = "Hmm, I don't recognize that difficulty. The options are easy, medium, or hard. What difficulty would you like?"
+        return build_response(session_attributes, build_speechlet_response(card_title, speech_output, reprompt_text, should_end_session))
+
     difficulty = intent['slots']['DifficultyValue']['value']
     if difficulty.lower() == "easy" or difficulty.lower() == "medium":
         chipsOnBoard = randint(18, 27)
     elif difficulty.lower() == "hard":
         chipsOnBoard = (4 * randint(5, 7)) + 1 + 2  # Alexa's first move will always be 2
-    else:
-        speech_output = "Hmm, I don't recognize that difficulty. The options are easy, medium, or hard. What difficulty would you like?"
-        reprompt_text = "Hmm, I don't recognize that difficulty. The options are easy, medium, or hard. What difficulty would you like?"
-        return build_response(session_attributes, build_speechlet_response(card_title, speech_output, reprompt_text, should_end_session))
     speech_output = "Ok, we'll play on " + difficulty + " difficulty. There are " + str(chipsOnBoard) + " chips on the table. I pick up 2 chips. There are now " + str(chipsOnBoard - 2) + " chips on the table. How many chips do you take?"
     chipsOnBoard = int(chipsOnBoard) - 2
     session_attributes = {"chipsOnBoard": str(chipsOnBoard), "difficulty": difficulty}
@@ -207,34 +214,11 @@ def PlayerWin(chipsOnBoard, AlexaSelection):
     should_end_session = True
     session_attributes = {}
 
-    speech_output = "There are now " + str(chipsOnBoard) + " chips on the table. I'll take " + str(AlexaSelection) + ". I've taken the last chip, you win! Congratulations, try playing again on a harder difficulty. Thanks for playing."
+    speech_output = "There are now " + str(chipsOnBoard) + " chips on the table. I'll take " + str(AlexaSelection) + ". I've taken the last chip, you win. Congratulations! Try playing again on a harder difficulty. Thanks for playing."
     reprompt_text = None
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session))
 
-
-
-'''
-def get_color_from_session(intent, session):
-    session_attributes = {}
-    reprompt_text = None
-
-    if session.get('attributes', {}) and "favoriteColor" in session.get('attributes', {}):
-        favorite_color = session['attributes']['favoriteColor']
-        speech_output = "Your favorite color is " + favorite_color + \
-                        ". Goodbye."
-        should_end_session = True
-    else:
-        speech_output = "I'm not sure what your favorite color is. " \
-                        "You can say, my favorite color is red."
-        should_end_session = False
-
-    # Setting reprompt_text to None signifies that we do not want to reprompt
-    # the user. If the user does not respond or says something that is not
-    # understood, the session will end.
-    return build_response(session_attributes, build_speechlet_response(
-        intent['name'], speech_output, reprompt_text, should_end_session))
-        '''
 
 def handle_session_end_request():
     card_title = "Session Ended"

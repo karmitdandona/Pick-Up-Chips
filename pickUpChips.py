@@ -1,11 +1,4 @@
-"""
-This sample demonstrates a simple skill built with the Amazon Alexa Skills Kit.
-The Intent Schema, Custom Slots, and Sample Utterances for this skill, as well
-as testing instructions are located at http://amzn.to/1LzFrj6
 
-For additional samples, visit the Alexa Skills Kit Getting Started guide at
-http://amzn.to/1LGWsLG
-"""
 
 from __future__ import print_function
 from random import randint
@@ -54,13 +47,15 @@ def on_intent(intent_request, session):
 
     intent = intent_request['intent']
     intent_name = intent_request['intent']['name']
+    card_title = "Pick Up Chips"
+    should_end_session = False
 
     # Dispatch to your skill's intent handlers
     if intent_name == "StartGame":
         return GameSetup(intent, session)
     elif intent_name == "GetNumber":
-        if intent["slots"]["Number"]["value"] != 1 and intent["slots"]["Number"]["value"] != 2 and intent["slots"]["Number"]["value"] != 3:
-            session_attributes = session["sessionAttributes"]
+        if intent["slots"]["Number"]["value"] != "1" and intent["slots"]["Number"]["value"] != "2" and intent["slots"]["Number"]["value"] != "3":
+            session_attributes = session["attributes"]
             speech_output = "Sorry, that sounded like an invalid number of chips. You can only take 1, 2, or 3 chips. How many chips do you take?"
             reprompt_text = "Sorry, that sounded like an invalid number of chips. How many chips do you take from the table?"
             return build_response(session_attributes, build_speechlet_response(card_title, speech_output, reprompt_text, should_end_session))
@@ -90,12 +85,12 @@ def build_speechlet_response(title, output, reprompt_text, should_end_session):
         'outputSpeech': {
             'type': 'PlainText',
             'text': output
-        },
+        },'''
         'card': {
             'type': 'Simple',
             'title': "SessionSpeechlet - " + title,
             'content': "SessionSpeechlet - " + output
-        },
+        },'''
         'reprompt': {
             'outputSpeech': {
                 'type': 'PlainText',

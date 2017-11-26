@@ -17,5 +17,6 @@ A small project to learn Amazon Alexa development.
 
 #### To Do:
 * get_welcome_response should only run first time the skill is launched (veteran users should not have to hear the full message every time)... Right now, is it setup so that saying difficulty as part of utterance skips the instructions??
+  * Currently, interrupting the instructions with "Alexa, {difficultyValue} skips the instructions."
 * Give the user the option of playing again once the game is over, instead of just suggesting it and ending the skill.
 * When there's only 1 chip on the table, it should not say chip*s* in the plural form.

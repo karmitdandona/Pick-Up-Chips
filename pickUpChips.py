@@ -141,7 +141,7 @@ def GameSetup(intent, session):
     if difficulty.lower() == "easy" or difficulty.lower() == "medium":
         chipsOnBoard = randint(18, 27)
     elif difficulty.lower() == "hard":
-        chipsOnBoard = (4 * randint(5, 8)) + 1 + 2  # Alexa's first move will always be 2
+        chipsOnBoard = (4 * randint(5, 7)) + 1 + 2  # Alexa's first move will always be 2
     else:
         speech_output = "Hmm, I don't recognize that difficulty. The options are easy, medium, or hard. What difficulty would you like?"
         reprompt_text = "Hmm, I don't recognize that difficulty. The options are easy, medium, or hard. What difficulty would you like?"

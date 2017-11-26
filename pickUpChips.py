@@ -21,7 +21,7 @@ def lambda_handler(event, context):
           event['session']['application']['applicationId'])
 
     if (event['session']['application']['applicationId'] !=
-             "amzn1.echo-sdk-ams.app.26e18db1-50b1-46e9-86d1-eb9df427e0bf"):
+             "amzn1.ask.skill.26e18db1-50b1-46e9-86d1-eb9df427e0bf"):
         raise ValueError("Invalid Application ID")
 
     if event['request']['type'] == "LaunchRequest":
@@ -144,15 +144,18 @@ def GameSetup(intent, session):
     # This should always evaluate to true
     difficulty = intent['slots']['DifficultyValue']['value']
     if difficulty.lower() == "easy" or difficulty.lower() == "medium":
-        chipsOnBoard == randint(18, 27)
+        chipsOnBoard = randint(18, 27)
+    elif difficulty.lower() == "hard":
+        chipsOnBoard = (4 * randint(5, 8)) + 1 + 2  # Alexa's first move will always be 2
     else:
-        chipsOnBoard == (4 * randint(5, 8)) + 1 + 2  # Alexa's first move will always be 2
-    speech_output = "Ok, we'll play on " + difficulty + " difficulty. There are " + str(chipsOnBoard) + " chips on the table. I pick up 2 chips. There are now" + str(chipsOnBoard - 2) + " chips on the table.How many chips do you take?"
+        speech_output = "Hmm, I don't recognize that difficulty. The options are easy, medium, or hard. What difficulty would you like?"
+        reprompt_text = "Hmm, I don't recognize that difficulty. The options are easy, medium, or hard. What difficulty would you like?"
+        return build_response(session_attributes, build_speechlet_response(card_title, speech_output, reprompt_text, should_end_session))
+    speech_output = "Ok, we'll play on " + difficulty + " difficulty. There are " + str(chipsOnBoard) + " chips on the table. I pick up 2 chips. There are now " + str(chipsOnBoard - 2) + " chips on the table.How many chips do you take?"
     chipsOnBoard = chipsOnBoard - 2
     session_attributes = {"chipsOnBoard": chipsOnBoard, "difficulty": difficulty}
     reprompt_text = "Sorry, that sounded like an invalid number of chips. How many chips do you take?"
-    return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, reprompt_text, should_end_session))
+    return build_response(session_attributes, build_speechlet_response(card_title, speech_output, reprompt_text, should_end_session))
 
 
 def GameLoop(intent, session):

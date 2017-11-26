@@ -190,7 +190,10 @@ def GameLoop(intent, session):
     if AlexaSelection == int(chipsOnBoard):
         return PlayerWin(chipsOnBoard, AlexaSelection)
 
-    speech_output = "There are now " + str(chipsOnBoard) + " chips on the table. I'll take " + str(AlexaSelection) + ". Now there's " + str(chipsOnBoard - AlexaSelection) + " chips left. How many do you want to take away?"
+    if int(chipsOnBoard - AlexaSelection) == 1:
+        speech_output = "There are now " + str(chipsOnBoard) + " chips on the table. I'll take " + str(AlexaSelection) + ". Now there's only " + str(chipsOnBoard - AlexaSelection) + " chip left. How many do you want to take away?"
+    else:
+        speech_output = "There are now " + str(chipsOnBoard) + " chips on the table. I'll take " + str(AlexaSelection) + ". Now there's " + str(chipsOnBoard - AlexaSelection) + " chips left. How many do you want to take away?"
     chipsOnBoard = int(chipsOnBoard) - AlexaSelection
     reprompt_text = "Sorry, that sounded like an invalid number of chips. There are " + str(chipsOnBoard) + " chips left on the table. How many do you take?"
     session_attributes = {"chipsOnBoard": str(chipsOnBoard), "difficulty": difficulty}
@@ -214,7 +217,10 @@ def PlayerWin(chipsOnBoard, AlexaSelection):
     should_end_session = True
     session_attributes = {}
 
-    speech_output = "There are now " + str(chipsOnBoard) + " chips on the table. I'll take " + str(AlexaSelection) + ". I've taken the last chip, you win. Congratulations! Try playing again on a harder difficulty. Thanks for playing."
+    if int(chipsOnBoard) == 1:
+        speech_output = "There is now " + str(chipsOnBoard) + " chip on the table. I'll pick it up. I've taken the last chip, you win. Congratulations! Try playing again on a harder difficulty. Thanks for playing."
+    else:
+        speech_output = "There are now " + str(chipsOnBoard) + " chips on the table. I'll pick up " + str(AlexaSelection) + ". I've taken the last chip, you win. Congratulations! Try playing again on a harder difficulty. Thanks for playing."
     reprompt_text = None
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session))

@@ -181,9 +181,9 @@ def GameLoop(intent, session):
         AlexaSelection = 4 - int(intent["slots"]["Number"]["value"])
 
     if AlexaSelection == int(chipsOnBoard):
-        return PlayerWin(chipsOnBoard)
+        return PlayerWin(chipsOnBoard, AlexaSelection)
 
-    speech_output = "There are now " + str(chipsOnBoard) + " chips on the table. I'll take " + str(AlexaSelection) + " Now there's " + str(chipsOnBoard - AlexaSelection) + " chips left. How many do you want to take away?"
+    speech_output = "There are now " + str(chipsOnBoard) + " chips on the table. I'll take " + str(AlexaSelection) + ". Now there's " + str(chipsOnBoard - AlexaSelection) + " chips left. How many do you want to take away?"
     chipsOnBoard = int(chipsOnBoard) - AlexaSelection
     reprompt_text = "Sorry, that sounded like an invalid number of chips. There are " + str(chipsOnBoard) + " chips left on the table. How many do you take?"
     session_attributes = {"chipsOnBoard": str(chipsOnBoard), "difficulty": difficulty}
@@ -202,7 +202,7 @@ def PlayerLose():
         card_title, speech_output, reprompt_text, should_end_session))
 
 
-def PlayerWin(chipsOnBoard):
+def PlayerWin(chipsOnBoard, AlexaSelection):
     card_title = "Game Over"
     should_end_session = True
     session_attributes = {}

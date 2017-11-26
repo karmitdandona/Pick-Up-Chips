@@ -146,9 +146,9 @@ def GameSetup(intent, session):
         speech_output = "Hmm, I don't recognize that difficulty. The options are easy, medium, or hard. What difficulty would you like?"
         reprompt_text = "Hmm, I don't recognize that difficulty. The options are easy, medium, or hard. What difficulty would you like?"
         return build_response(session_attributes, build_speechlet_response(card_title, speech_output, reprompt_text, should_end_session))
-    speech_output = "Ok, we'll play on " + difficulty + " difficulty. There are " + str(chipsOnBoard) + " chips on the table. I pick up 2 chips. There are now " + str(chipsOnBoard - 2) + " chips on the table.How many chips do you take?"
-    chipsOnBoard = chipsOnBoard - 2
-    session_attributes = {"chipsOnBoard": chipsOnBoard, "difficulty": difficulty}
+    speech_output = "Ok, we'll play on " + difficulty + " difficulty. There are " + str(chipsOnBoard) + " chips on the table. I pick up 2 chips. There are now " + str(chipsOnBoard - 2) + " chips on the table. How many chips do you take?"
+    chipsOnBoard = int(chipsOnBoard) - 2
+    session_attributes = {"chipsOnBoard": str(chipsOnBoard), "difficulty": difficulty}
     reprompt_text = "Sorry, that sounded like an invalid number of chips. How many chips do you take?"
     return build_response(session_attributes, build_speechlet_response(card_title, speech_output, reprompt_text, should_end_session))
 
@@ -159,34 +159,34 @@ def GameLoop(intent, session):
     card_title = intent['name']
     should_end_session = False
 
-    chipsOnBoard = session["sessionAttributes"]["chipsOnBoard"]
-    difficulty = session["sessionAttributes"]["difficulty"]
+    chipsOnBoard = session["attributes"]["chipsOnBoard"]
+    difficulty = session["attributes"]["difficulty"]
 
-    if intent["slots"]["Number"]["value"] < chipsOnBoard:
-        chipsOnBoard = chipsOnBoard - intent["slots"]["Number"]["value"]  # subtracts the user's selection
-    elif intent["slots"]["Number"]["value"] > chipsOnBoard:
+    if int(intent["slots"]["Number"]["value"]) < int(chipsOnBoard):
+        chipsOnBoard = int(chipsOnBoard) - int(intent["slots"]["Number"]["value"])  # subtracts the user's selection
+    elif int(intent["slots"]["Number"]["value"]) > int(chipsOnBoard):
         speech_output = "You selected more chips than are on the table. There are still " + str(chipsOnBoard) + " chips left on the table. How many do you want to take?"
         reprompt_text = "Sorry, that sounded like an invalid number of chips. There are " + str(chipsOnBoard) + " left on the table. How many do you take?"
-        session_attributes = {"chipsOnBoard": chipsOnBoard, "difficulty": difficulty}
+        session_attributes = {"chipsOnBoard": str(chipsOnBoard), "difficulty": difficulty}
         return build_response(session_attributes, build_speechlet_response(
             card_title, speech_output, reprompt_text, should_end_session))
-    elif intent["slots"]["Number"]["value"] == chipsOnBoard:
+    elif int(intent["slots"]["Number"]["value"]) == int(chipsOnBoard):
         return PlayerLose()
 
     if difficulty.lower() == "easy" or difficulty.lower() == "medium":
         AlexaSelection = randint(1, 3)
-        while AlexaSelection > chipsOnBoard:  # Handles the edge cases near the end of the game so chipsOnBoard doesn't go into the negatives.
+        while AlexaSelection > int(chipsOnBoard):  # Handles the edge cases near the end of the game so chipsOnBoard doesn't go into the negatives.
             AlexaSelection = randint(1,3)
     else:
-        AlexaSelection = 4 - intent["slots"]["Number"]["value"]
+        AlexaSelection = 4 - int(intent["slots"]["Number"]["value"])
 
-    if AlexaSelection == chipsOnBoard:
+    if AlexaSelection == int(chipsOnBoard):
         return PlayerWin()
 
-    speech_output = "There are now " + str(chipsOnBoard) + " chips on the table. I'll take " + str(AlexaSelection) + ". Now there's " + str(chipsOnBoard - AlexaSelection) + " chips left. How many do you want to take away?"
-    chipsOnBoard = chipsOnBoard - AlexaSelection
+    speech_output = "There are now " + str(chipsOnBoard) + " chips on the table. I'll take " + str(AlexaSelection) + " Now there's " + str(chipsOnBoard - AlexaSelection) + " chips left. How many do you want to take away?"
+    chipsOnBoard = int(chipsOnBoard) - AlexaSelection
     reprompt_text = "Sorry, that sounded like an invalid number of chips. There are " + str(chipsOnBoard) + " chips left on the table. How many do you take?"
-    session_attributes = {"chipsOnBoard": chipsOnBoard, "difficulty": difficulty}
+    session_attributes = {"chipsOnBoard": str(chipsOnBoard), "difficulty": difficulty}
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session))
 

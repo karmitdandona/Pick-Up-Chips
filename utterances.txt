@@ -5,6 +5,7 @@ StartGame Play {DifficultyValue}
 StartGame Pick Up Chips {DifficultyValue}
 StartGame {DifficultyValue} Pick Up Chips
 StartGame {DifficultyValue} Play Pick Up Chips
+StartGame {DifficultyValue} Difficulty
 GetNumber {Number}
 GetNumber {Number} chips
 GetNumber I pick {Number}

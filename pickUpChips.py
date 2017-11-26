@@ -157,53 +157,63 @@ def GameSetup(intent, session):
 
 def GameLoop(intent, session):
     """ The core game loop, keeps going until no more chips left on table. Order of this function: user(input already in intent), then Alexa."""
+    # This function should never be entered if chipsOnBoard < 1
     card_title = intent['name']
     should_end_session = False
 
     chipsOnBoard = session["sessionAttributes"]["chipsOnBoard"]
     difficulty = session["sessionAttributes"]["difficulty"]
-    chipsOnBoard = chipsOnBoard - intent["slots"]["Number"]["value"]  # subtracts the user's selection
 
-    ### Consider: Win conditions and edge case of the final turn before the win condition. (also make should_end_session True if there's a winner)  # FIXME
-
-    # Make an isValidInput function ot run before subtracting the user's choice from chipsOnBoard to ensure we dont go into the negatives.
-    # Use this function for Alexa's choice too (Only really needed for the randint one, since hard mode shouldn't require it. If this fails the input check, just keep re-checking it in a while loop until it passes (i.e. keep generating random numbers until it works, as long as we have more than 1 chip left on the table... or just have a specific case for if it's greater than 1 and less than 3, just subtract the exact amount to make it 1 and thus win the game [probably won't do this, because it's supposed to be easy mode])))
-
-    # Then make a function that checks iwn conditions after the user's play (after the subtraction) and again after Alexa's play (after Alexa's subtraction)
-    
-
+    if intent["slots"]["Number"]["value"] < chipsOnBoard:
+        chipsOnBoard = chipsOnBoard - intent["slots"]["Number"]["value"]  # subtracts the user's selection
+    elif intent["slots"]["Number"]["value"] > chipsOnBoard:
+        speech_output = "You selected more chips than are on the table. There are still " + str(chipsOnBoard) + " chips left on the table. How many do you want to take?"
+        reprompt_text = "Sorry, that sounded like an invalid number of chips. There are " + str(chipsOnBoard) + " left on the table. How many do you take?"
+        session_attributes = {"chipsOnBoard": chipsOnBoard, "difficulty": difficulty}
+        return build_response(session_attributes, build_speechlet_response(
+            card_title, speech_output, reprompt_text, should_end_session))
+    elif intent["slots"]["Number"]["value"] == chipsOnBoard:
+        return PlayerLose()
 
     if difficulty.lower() == "easy" or difficulty.lower() == "medium":
         AlexaSelection = randint(1, 3)
+        while AlexaSelection > chipsOnBoard:  # Handles the edge cases near the end of the game so chipsOnBoard doesn't go into the negatives.
+            AlexaSelection = randint(1,3)
     else:
         AlexaSelection = 4 - intent["slots"]["Number"]["value"]
+
+    if AlexaSelection == chipsOnBoard:
+        return PlayerWin()
+
     speech_output = "There are now " + str(chipsOnBoard) + " chips on the table. I'll take " + str(AlexaSelection) + ". Now there's " + str(chipsOnBoard - AlexaSelection) + " chips left. How many do you want to take away?"
     chipsOnBoard = chipsOnBoard - AlexaSelection
-    reprompt_text = "Sorry, that sounded like an invalid number of chips. There are " + str(chipsOnBoard) + " left on the table. How many do you take?"
+    reprompt_text = "Sorry, that sounded like an invalid number of chips. There are " + str(chipsOnBoard) + " chips left on the table. How many do you take?"
     session_attributes = {"chipsOnBoard": chipsOnBoard, "difficulty": difficulty}
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session))
 
 
+def PlayerLose():
+    card_title = "Game Over"
+    should_end_session = True
+    session_attributes = {}
 
-'''
-        favorite_color = intent['slots']['Color']['value']
-        session_attributes = create_favorite_color_attributes(favorite_color)
-        speech_output = "I now know your favorite color is " + \
-                        favorite_color + \
-                        ". You can ask me your favorite color by saying, " \
-                        "what's my favorite color?"
-        reprompt_text = "You can ask me your favorite color by saying, " \
-                        "what's my favorite color?"
-    else:
-        speech_output = "I'm not sure what your favorite color is. " \
-                        "Please try again."
-        reprompt_text = "I'm not sure what your favorite color is. " \
-                        "You can tell me your favorite color by saying, " \
-                        "my favorite color is red."
+    speech_output = "You've picked up the last chip on the table. You lose. Better luck next time, thanks for playing!"
+    reprompt_text = None
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session))
-        '''
+
+
+def PlayerWin():
+    card_title = "Game Over"
+    should_end_session = True
+    session_attributes = {}
+
+    speech_output = "There are now " + str(chipsOnBoard) + " chips on the table. I'll take " + str(AlexaSelection) + ". I've taken the last chip, you win! Congratulations, try playing again on a harder difficulty. Thanks for playing."
+    reprompt_text = None
+    return build_response(session_attributes, build_speechlet_response(
+        card_title, speech_output, reprompt_text, should_end_session))
+
 
 
 '''
@@ -235,9 +245,3 @@ def handle_session_end_request():
     should_end_session = True
     return build_response({}, build_speechlet_response(
         card_title, speech_output, None, should_end_session))
-
-
-'''
-def create_favorite_color_attributes(favorite_color):
-    return {"favoriteColor": favorite_color}
-'''

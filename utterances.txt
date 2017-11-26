@@ -6,6 +6,19 @@ GetNumber {Number}
 GetNumber {Number} chips
 GetNumber I pick {Number}
 GetNumber I pick {Number} chips
+GetNumber I pick {Number} chips from table
+GetNumber Pick {Number}
+GetNumber Pick {Number} chips
+GetNumber Pick {Number} chips on the table
+GetNumber Pick {Number} chips from the table
+GetNumber Take {Number}
+GetNumber Take {Number} chips
+GetNumber Take {Number} chips on the table
+GetNumber Take {Number} chips from the table
+GetNumber I take {Number}
+GetNumber I take {Number} chips
+GetNumber I take {Number} chips on the table
+GetNumber I take {Number} chips from the table
 AMAZON.HelpIntent How do I play Pick Up Chips
 AMAZON.HelpIntent How to play Pick Up Chips
 AMAZON.HelpIntent Instructions

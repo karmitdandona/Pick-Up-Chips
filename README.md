@@ -12,8 +12,8 @@ A small project to learn Amazon Alexa development.
 * During the turn, the player must pick up either 1, 2, or 3 chips from the table
 
 
-* After the game is over, the user is given the option to play again
-* If the user won, he/she is prompted to play again on Hard mode
+* After the game is over, the user is suggested to try again
+* If the user won, the suggestion is to try again on Hard mode
 
 #### To Do:
 * get_welcome_response should only run first time the skill is launched (veteran users should not have to hear the full message every time)... Right now, is it setup so that saying difficulty as part of utterance skips the instructions??

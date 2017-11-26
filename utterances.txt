@@ -2,6 +2,9 @@ StartGame Play Pick Up Chips {DifficultyValue}
 StartGame {DifficultyValue}
 StartGame Play Pick Up Chips {DifficultyValue}
 StartGame Play {DifficultyValue}
+StartGame Pick Up Chips {DifficultyValue}
+StartGame {DifficultyValue} Pick Up Chips
+StartGame {DifficultyValue} Play Pick Up Chips
 GetNumber {Number}
 GetNumber {Number} chips
 GetNumber I pick {Number}

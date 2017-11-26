@@ -20,3 +20,4 @@ A small project to learn Amazon Alexa development.
   * Currently, interrupting the instructions with "Alexa, {difficultyValue} skips the instructions."
 * Give the user the option of playing again once the game is over, instead of just suggesting it and ending the skill.
 * When there's only 1 chip on the table, it should not say chip*s* in the plural form.
+* Use SSML instead of text so the speech outputs are more natural.

@@ -1,4 +1,5 @@
-StartGame Play Pick Up Chips {DifficultyValue}
+StartGame Play Pick Up Chips
+StartGame Pick Up Chips
 StartGame {DifficultyValue}
 StartGame Play Pick Up Chips {DifficultyValue}
 StartGame Play {DifficultyValue}

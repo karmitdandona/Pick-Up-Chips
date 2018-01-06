@@ -19,5 +19,5 @@ A small project to learn Amazon Alexa development.
 * Give the user the option of playing again once the game is over, instead of just suggesting it and ending the skill.
 * [x] ~~When there's only 1 chip on the table, it should not say chip*s* in the plural form.~~
 * Use SSML instead of text so the speech outputs are more natural (low priority).
-* If user says a number (returns True for issnumber()) but the number is not a positive integer, prompt them accordingly (instead of reverting to the difficulty menu, as it currently does.)
-* Add more print statements in pickUpChips.py so the logs in AWS CloudWatch Management Console provide me more information on Game State.
+* [x] ~~If user says a number (returns True for issnumber()) but the number is not a positive integer, prompt them accordingly (instead of reverting to the difficulty menu, as it currently does.)~~
+* Add more print statements in pickUpChips.py so the logs in AWS CloudWatch Management Console provide me more information on Game State. (medium priority)

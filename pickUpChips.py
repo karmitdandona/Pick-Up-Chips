@@ -145,7 +145,7 @@ def GameSetup(intent, session):
 
     if 'value' not in intent['slots']['DifficultyValue']:  # If a word that is not easy, medium, or hard is used for difficulty. If a number is used, that is covered by the edge case in try/except in the on_intent function
         speech_output = "Hmm, I don't recognize that difficulty. The options are easy, medium, or hard. What difficulty would you like?"
-        reprompt_text = "Hmm, I don't recognize that difficulty. The options are easy, medium, or hard. What difficulty would you like?"
+        reprompt_text = "Hmm, I  still don't recognize that difficulty. The options are easy, medium, or hard. What difficulty would you like?"
         return build_response(session_attributes, build_speechlet_response(card_title, speech_output, reprompt_text, should_end_session))
 
     difficulty = intent['slots']['DifficultyValue']['value']
@@ -169,7 +169,7 @@ def GameLoop(intent, session):
     chipsOnBoard = session["attributes"]["chipsOnBoard"]
     difficulty = session["attributes"]["difficulty"]
 
-    if int(intent["slots"]["Number"]["value"]) < int(chipsOnBoard):
+    if int(intent["slots"]["Number"]["value"]) < int(chipsOnBoard) and int(intent["slots"]["Number"]["value"]) > 0:
         chipsOnBoard = int(chipsOnBoard) - int(intent["slots"]["Number"]["value"])  # subtracts the user's selection
     elif int(intent["slots"]["Number"]["value"]) > int(chipsOnBoard):
         speech_output = "You selected more chips than are on the table. There are still " + str(chipsOnBoard) + " chips left on the table. How many do you want to take?"
@@ -179,6 +179,12 @@ def GameLoop(intent, session):
             card_title, speech_output, reprompt_text, should_end_session))
     elif int(intent["slots"]["Number"]["value"]) == int(chipsOnBoard):
         return PlayerLose()
+    elif int(intent["slots"]["Number"]["value"]) < 0:
+        speech_output = "Sorry, that's a negative number of chips! There are " + str(chipsOnBoard) + " chips left on the table. How many do you want to take?"
+        reprompt_text = "Sorry, that sounded like an invalid number of chips. There are " + str(chipsOnBoard) + " left on the table. How many do you take?"
+        session_attributes = {"chipsOnBoard": str(chipsOnBoard), "difficulty": difficulty}
+        return build_response(session_attributes, build_speechlet_response(
+            card_title, speech_output, reprompt_text, should_end_session))
 
     if difficulty.lower() == "easy" or difficulty.lower() == "medium":
         AlexaSelection = randint(1, 3)

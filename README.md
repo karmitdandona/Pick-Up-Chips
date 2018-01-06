@@ -1,5 +1,5 @@
 # Pick-Up-Chips
-A small project to learn Amazon Alexa development.
+[A small project to learn Amazon Alexa development.](https://www.amazon.com/Karmit-Dandona-Pick-Up-Chips/dp/B077RCVNWH "See this Skill on the Alexa Store")
 
 ### Game
 * The objective is to *not* be the one to pick up the last chip on the table
